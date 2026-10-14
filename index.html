@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Findr</title>
+<meta name="description" content="Findr: QR tags for lost things, with a reward held in escrow for the finder. MVP prototype with mock data.">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page">
+
+  <div class="phone" aria-label="Findr app prototype">
+    <div class="status"><span>14:05</span><span>KNUBA campus</span></div>
+    <div class="role" role="group" aria-label="View as">
+      <button id="asOwner" aria-pressed="true">I'm the owner</button>
+      <button id="asFinder" aria-pressed="false">I found something</button>
+    </div>
+    <div class="app" id="app">
+
+      <!-- OWNER -->
+      <section class="screen" data-screen="items">
+        <h2>My tagged things</h2>
+        <div id="itemList" style="display:flex;flex-direction:column;gap:10px"></div>
+        <button class="btn ghost" data-go="add">+ Tag a new item</button>
+      </section>
+
+      <section class="screen" data-screen="item" hidden>
+        <button class="back" data-go="items">← My things</button>
+        <h2 id="iName"></h2>
+        <div class="tagqr"><span id="iQr"></span><b id="iTag"></b></div>
+        <div class="card">
+          <div class="row"><span class="muted">Reward locked on Solana</span><b id="iReward"></b></div>
+          <div class="row"><span class="muted">Status</span><span class="badge" id="iStatus"></span></div>
+        </div>
+        <button class="btn ghost" id="lostBtn">Mark as lost</button>
+      </section>
+
+      <section class="screen" data-screen="add" hidden>
+        <button class="back" data-go="items">← My things</button>
+        <h2>Tag a new item</h2>
+        <label for="newName">What is it?</label>
+        <input type="text" id="newName" value="Student ID card">
+        <label>Reward for the finder</label>
+        <div class="chips" id="rewardChips">
+          <button aria-pressed="false" data-r="5">5 USDC</button>
+          <button aria-pressed="true" data-r="10">10 USDC</button>
+          <button aria-pressed="false" data-r="25">25 USDC</button>
+        </div>
+        <p class="muted" style="margin:0;font-size:13px">The reward is locked in escrow now. It goes to the finder only when you confirm the item is back.</p>
+        <button class="btn" id="createBtn">Lock reward &amp; create tag</button>
+      </section>
+
+      <section class="screen" data-screen="inbox" hidden>
+        <h2>Messages</h2>
+        <div id="inboxList" style="display:flex;flex-direction:column;gap:10px"></div>
+      </section>
+
+      <section class="screen" data-screen="ownerChat" hidden>
+        <button class="back" data-go="inbox">← Messages</button>
+        <h2>Finder of your <span id="ocItem"></span></h2>
+        <div class="chat" id="ocChat"></div>
+        <div class="quick" id="ocQuick"></div>
+        <button class="btn" id="confirmBtn">I got it back · release reward</button>
+      </section>
+
+      <section class="screen" data-screen="released" hidden>
+        <div class="check">✓</div>
+        <h2 style="text-align:center">Reward sent</h2>
+        <div class="card">
+          <div class="row"><span class="muted">Item</span><b id="rItem"></b></div>
+          <div class="row"><span class="muted">Paid to the finder</span><b id="rAmt"></b></div>
+          <div class="row"><span class="muted">Findr fee</span><b id="rFee"></b></div>
+          <div class="muted" style="font-size:12px">Transaction</div>
+          <div class="mono" id="rTx"></div>
+        </div>
+        <button class="btn" data-go="items">Back to my things</button>
+      </section>
+
+      <!-- FINDER -->
+      <section class="screen" data-screen="scan" hidden>
+        <h2>Found something with a Findr tag?</h2>
+        <div class="cam" aria-label="Camera view"><div class="frame"></div><p>Point the camera at the QR tag</p></div>
+        <button class="btn" id="scanBtn">Simulate scanning a tag</button>
+        <p class="muted" style="margin:0;font-size:13px">No app install needed for finders. The tag opens a web page. You never see the owner's phone number.</p>
+      </section>
+
+      <section class="screen" data-screen="found" hidden>
+        <h2>You found <span id="fItem"></span></h2>
+        <div class="card">
+          <div class="row"><span class="muted">Reward waiting for you</span><b id="fReward" style="color:var(--accent);font-size:20px"></b></div>
+          <div class="row"><span class="muted">Locked in escrow</span><span class="badge">✓ Verified</span></div>
+        </div>
+        <h3>Message the owner anonymously</h3>
+        <div class="chat" id="fChat"></div>
+        <div class="quick" id="fQuick"></div>
+        <div class="compose"><input type="text" id="fInput" placeholder="Write a message…" aria-label="Message"><button id="fSend">Send</button></div>
+      </section>
+
+    </div>
+    <nav class="tabs" id="ownerTabs" aria-label="Owner sections">
+      <button data-tab="items" aria-current="true">My things</button>
+      <button data-tab="inbox" aria-current="false">Messages<span class="dot" id="dot" hidden></span></button>
+      <button data-tab="add" aria-current="false">Add tag</button>
+    </nav>
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
